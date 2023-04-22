@@ -11,4 +11,15 @@ soup = BeautifulSoup(dr.page_source, 'html.parser')
 titles = soup.find_all(class_="listing-search-item__link listing-search-item__link--title")
 
 for title in titles: 
-    print(title.contents)
+    print(title['href'])
+
+
+class Apartment:
+    def __init__(self, link, name, address, price, roomNo, size, description):
+        self.link = link
+        self.name = name
+        self.address = address
+        self.price = price
+        self.roomNo = roomNo
+        self.size = size
+        self.description = description
