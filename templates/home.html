@@ -1,23 +1,37 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title></title>
-    </head>
-    <body>
-        <h1>Home Page</h1>
-        <div class="content-section">
-            <form method="POST" action="">
-                <fieldset class="form-group">
-                 <ul class="form-group">
-                    {{form.city.label(class="form-control-label")}}
-                    {{form.city(class="form-control form-control-lg")}}
-                 </ul>  
-                 <ul class="form-group">
-                    {{form.bedrooms.label(class="form-control-label")}}
-                    {{form.bedrooms(class="form-control form-control-lg")}}
-                 </ul>  
-                </fieldset>
-            </form>
+{% extends "layout.html" %}
+{% block content %}
+<h1>Home Page</h1>
+<div class="content-section">
+    <form method="POST" action="">
+        <fieldset class="form-group">
+            <div class="form-group">
+                {{form.city.label(class="form-control-label")}}
+                {{form.city(class="form-control form-control-lg")}}
+            </div>
+            <div class="form-group">
+                {{form.rooms.label(class="form-control-label")}}
+                {{form.rooms(class="form-control form-control-lg")}}
+            </div>
+            <div class="form-group">
+                {{form.min_price.label(class="form-control-label")}}
+                {{form.min_price(class="form-control form-control-lg")}}
+            </div>
+            <div class="form-group">
+                {{form.max_price.label(class="form-control-label")}}
+                {{form.max_price(class="form-control form-control-lg")}}
+            </div>
+            <div class="form-group">
+                {{form.interiorType.label(class="form-control-label")}}
+                {{form.interiorType(class="form-control form-control-lg")}}
+            </div>
+            <div class="form-group">
+                {{form.size.label(class="form-control-label")}}
+                {{form.size(class="form-control form-control-lg")}}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{form.submit(class="btn btn-outline-info")}}
         </div>
-    </body>
-</html>
+    </form>
+</div>
+{% endblock content %}
