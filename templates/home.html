@@ -3,30 +3,91 @@
 <h1>Home Page</h1>
 <div class="content-section">
     <form method="POST" action="">
+        {{ form.csrf_token }}
         <fieldset class="form-group">
             <div class="form-group">
                 {{form.city.label(class="form-control-label")}}
-                {{form.city(class="form-control form-control-lg")}}
+
+                {% if form.city.errors %}
+                    {{form.city(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.city.errors %}
+                            <span>{{error}}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{form.city(class="form-control form-control-lg")}}
+                {% endif %}
             </div>
             <div class="form-group">
                 {{form.rooms.label(class="form-control-label")}}
-                {{form.rooms(class="form-control form-control-lg")}}
+                
+                {% if form.rooms.errors %}
+                    {{form.rooms(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.rooms.errors %}
+                            <span>{{error}}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{form.rooms(class="form-control form-control-lg")}}
+                {% endif %}
             </div>
             <div class="form-group">
                 {{form.min_price.label(class="form-control-label")}}
-                {{form.min_price(class="form-control form-control-lg")}}
+
+                {% if form.min_price.errors %} 
+                    {{form.min_price(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.min_price.errors %} 
+                            <span>{{error}}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{form.min_price(class="form-control form-control-lg")}}
+                {% endif %}
             </div>
             <div class="form-group">
                 {{form.max_price.label(class="form-control-label")}}
-                {{form.max_price(class="form-control form-control-lg")}}
+                
+                {% if form.max_price.errors %} 
+                    {{form.max_price(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.max_price.errors %} 
+                            <span>{{error}}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{form.max_price(class="form-control form-control-lg")}}
+                {% endif %}
             </div>
             <div class="form-group">
                 {{form.interiorType.label(class="form-control-label")}}
-                {{form.interiorType(class="form-control form-control-lg")}}
+                
+                {% if form.interiorType.errors %} 
+                    {{form.interiorType(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.interiorType.errors %} 
+                            <span>{{error}}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{form.interiorType(class="form-control form-control-lg")}}
+                {% endif %}
             </div>
             <div class="form-group">
                 {{form.size.label(class="form-control-label")}}
-                {{form.size(class="form-control form-control-lg")}}
+                
+                {% if form.size.errors %} 
+                    {{form.size(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.size.errors %} 
+                            <span>{{error}}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{form.size(class="form-control form-control-lg")}}
+                {% endif %}
             </div>
         </fieldset>
         <div class="form-group">
