@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import time
 from selenium import webdriver
 
-dr = webdriver.Chrome()
+'''dr = webdriver.Chrome()
 dr.get("https://www.pararius.com/apartments/delft")
 time.sleep(3)
 soup = BeautifulSoup(dr.page_source, 'html.parser')
@@ -15,22 +15,23 @@ for title in soup.find_all(class_="listing-search-item__link listing-search-item
     titles.append(title)
 
 titles = list(titles)
-print(len(titles))
+print(len(titles))'''
 
 def pararius_link(filters):
-    link = "https://pararius.com/apartments/" + filters["city"]
-    priceRange = "/" + filters["minPrice"] + "-" + filters["maxPrice"]
-    rooms = "/" + filters["rooms"] + "-bedrooms"
-    interiorType = "/" + filters["interior"]
-    size = "/" + filters["size"] + "m2"
+    link = "https://pararius.com/apartments/" + filters["city"].lower()
+    priceRange = "/" + str(filters["minPrice"]) + "-" + str(filters["maxPrice"])
+    rooms = "/" + str(filters["rooms"]) + "-bedrooms"
+    interiorType = "/" + filters["interior"].lower()
+    size = "/" + str(filters["size"]) + "m2"
     link+=priceRange + rooms + interiorType + size
     return link
 
 def get_from_pararius(filters) :
     dr = webdriver.Chrome()
     initialLink = pararius_link(filters)
+    print(initialLink)
     dr.get(initialLink)
-    time.sleep(3) 
+    time.sleep(5) 
     soup = BeautifulSoup(dr.page_source, 'html.parser')
 
     links=[]
@@ -40,11 +41,12 @@ def get_from_pararius(filters) :
 
     pages = soup.find_all(class_="pagination__item")
     if len(pages)>=3 :
-        lastPageNo = pages[len(pages)-2]["data-page"]
+        lastPageNo = pages[len(pages)-2].a["data-page"]
     else : 
         lastPageNo = 1  
-    for pageNo in range(2, lastPageNo + 1) :
-        dr.get(initialLink + "/page-" + pageNo)
+    for pageNo in range(2, int(lastPageNo) + 1) :
+        dr.get(initialLink + "/page-" + str(pageNo))
+        time.sleep(3)
         soup = BeautifulSoup(dr.page_source, 'html.parser')
 
         for apartment in soup.find_all(class_="listing-search-item__link listing-search-item__link--title") :
