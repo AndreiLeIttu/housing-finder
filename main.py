@@ -1,7 +1,6 @@
 from flask import Flask, render_template, url_for, redirect
 from forms import FilterForm
-from apartments_getter import get_from_pararius
-
+from apartments_getter import get_pararius_apartments
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '7215535b018cb068bf7e26cb750baa05'
@@ -34,6 +33,5 @@ def home():
 
 @app.route("/list")
 def list():
-    links = get_from_pararius(filters)
-    print(links)
-    return render_template('apartments_listing.html', title='List')
+    apartments = get_pararius_apartments(filters)
+    return render_template('apartments_listing.html', title='List', apartments = apartments)

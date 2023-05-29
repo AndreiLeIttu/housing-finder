@@ -17,50 +17,95 @@ for title in soup.find_all(class_="listing-search-item__link listing-search-item
 titles = list(titles)
 print(len(titles))'''
 
-def pararius_link(filters):
+def pararius_initial_link(filters):
     link = "https://pararius.com/apartments/" + filters["city"].lower()
     priceRange = "/" + str(filters["minPrice"]) + "-" + str(filters["maxPrice"])
     rooms = "/" + str(filters["rooms"]) + "-bedrooms"
+    if filters["interior"].lower()=="unfurnished":
+        filters["interior"]="upholstered"
     interiorType = "/" + filters["interior"].lower()
     size = "/" + str(filters["size"]) + "m2"
     link+=priceRange + rooms + interiorType + size
     return link
 
-def get_from_pararius(filters) :
+def get_pararius_links(filters) :
     dr = webdriver.Chrome()
-    initialLink = pararius_link(filters)
+    initialLink = pararius_initial_link(filters)
     print(initialLink)
     dr.get(initialLink)
     time.sleep(5) 
     soup = BeautifulSoup(dr.page_source, 'html.parser')
 
     links=[]
-
+    infos = soup.find_all(class_="listing-search-item__info")
+    index=0
     for apartment in soup.find_all(class_="listing-search-item__link listing-search-item__link--title") :
-        links.append(apartment["href"])
+        if infos[index].a.text!="Björnd Makelaardij":
+                links.append(apartment["href"])
+        index+=1
+        
 
     pages = soup.find_all(class_="pagination__item")
-    if len(pages)>=3 :
+    if len(pages)>=3:
         lastPageNo = pages[len(pages)-2].a["data-page"]
     else : 
         lastPageNo = 1  
     for pageNo in range(2, int(lastPageNo) + 1) :
         dr.get(initialLink + "/page-" + str(pageNo))
-        time.sleep(3)
         soup = BeautifulSoup(dr.page_source, 'html.parser')
-
+        infos = soup.find_all(class_="listing-search-item__info")
+        index=0
         for apartment in soup.find_all(class_="listing-search-item__link listing-search-item__link--title") :
-            links.append(apartment["href"])
-    
+            if infos[index].a.text!="Björnd Makelaardij":
+                links.append(apartment["href"])
+            index+=1
     return links
-    
+
+def get_pararius_apartments(filters) :
+    apartments = []
+    counter=0
+    links = get_pararius_links(filters)
+    dr = webdriver.Chrome()
+    for link in links:
+        link = "https://pararius.com" + link
+        dr.get(link)
+        print(link)
+        counter+=1
+        if counter==1:
+            time.sleep(2)
+        soup = BeautifulSoup(dr.page_source, 'html.parser')
+        if validate_apartment(soup):
+            address = soup.find(class_="listing-detail-summary__location").text
+            name = soup.find(class_="listing-detail-summary__title").text
+            price = soup.find(class_="listing-detail-summary__price").contents[0].strip()
+            roomNo = soup.find(class_="illustrated-features__item illustrated-features__item--number-of-rooms").text
+            size = soup.find(class_="illustrated-features__item illustrated-features__item--surface-area").text
+            image = soup.find(class_="picture__image")["src"]
+            
+            apartments.append(Apartment(link,image,name,address,price,roomNo,size))
+    return apartments           
+
+def validate_apartment(soup):
+    for elem in soup.find_all("p") + soup.find_all("li"):
+        if not_for_students(elem.text):
+            return False
+    return True
+
+def not_for_students(text):
+    gatekeep_list = ["no students", "not for students", "no student"]
+    if text.lower() in gatekeep_list:
+        return True
+    return False
 
 class Apartment:
-    def __init__(self, link, name, address, price, roomNo, size, description):
+    def __init__(self, link, image, name, address, price, roomNo, size):
         self.link = link
+        self.image = image
         self.name = name
         self.address = address
         self.price = price
         self.roomNo = roomNo
         self.size = size
-        self.description = description
+
+    def printApartment(self):
+        print("Name: ", self.name, ", Address: ", self.address, ", Price: ", self.price, ", Rooms: ", self.roomNo, ", Size: ", self.size, ", Image: ", self.image)
