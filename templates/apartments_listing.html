@@ -1,4 +1,26 @@
 {% extends "layout.html" %} 
 {% block content %} 
 <h1>Listing</h1>
+{% for apartment in apartments %} 
+    <h2>{{apartment.name}}</h2>
+    <img src="{{apartment.image}}">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col">
+            {{"Price: " + apartment.price}}
+            </div>
+            <div class="col">
+            {{"Size: " + apartment.size}}
+            </div>
+            <div class="col">
+            {{apartment.roomNo}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+            {{"Address: " + apartment.address}}
+            </div>
+        </div>
+    </div>
+{% endfor %}
 {% endblock content %}
