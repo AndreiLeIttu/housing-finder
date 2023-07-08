@@ -20,7 +20,10 @@ print(len(titles))'''
 def pararius_initial_link(filters):
     link = "https://pararius.com/apartments/" + filters["city"].lower()
     priceRange = "/" + str(filters["minPrice"]) + "-" + str(filters["maxPrice"])
-    rooms = "/" + str(filters["rooms"]) + "-bedrooms"
+    if filters["rooms"] != 1:
+        rooms = "/" + str(filters["rooms"]-1) + "-bedrooms"
+    else :
+        rooms = ""
     if filters["interior"].lower()=="unfurnished":
         filters["interior"]="upholstered"
     interiorType = "/" + filters["interior"].lower()
@@ -81,8 +84,9 @@ def get_pararius_apartments(filters) :
             roomNo = soup.find(class_="illustrated-features__item illustrated-features__item--number-of-rooms").text
             size = soup.find(class_="illustrated-features__item illustrated-features__item--surface-area").text
             image = soup.find(class_="picture__image")["src"]
-            
-            apartments.append(Apartment(link,image,name,address,price,roomNo,size))
+            #check if number of rooms is strictly equal to the requested number
+            if roomNo[0] == str(filters["rooms"]):
+                apartments.append(Apartment(link,image,name,address,price,roomNo,size))
     return apartments           
 
 def validate_apartment(soup):
@@ -91,9 +95,10 @@ def validate_apartment(soup):
             return False
     return True
 
+#check if text inside the advert contains strings that exclude students
 def not_for_students(text):
-    gatekeep_list = ["no students", "not for students", "no student"]
-    if text.lower() in gatekeep_list:
+    gatekeep_list = ["no students", "not for students", "no student", "not suitable for students"]
+    if any(gatekeeper in text.lower() for gatekeeper in gatekeep_list):
         return True
     return False
 
