@@ -2,7 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, AnyOf, NumberRange
 
-city_list = ['Delft', 'Amsterdam']
+city_list = ['Delft', 'Amsterdam', 'Rotterdam', 'Den Haag', 'Haarlem', 'Eindhoven', 'Groningen', 'Maastricht',
+             'Leiden', 'Utrecht', 'Breda', 'Amstelveen', 'Arnhem', 'Almere', 'Den Bosch']
 
 class FilterForm(FlaskForm):
     city = StringField('City', validators=[AnyOf(city_list)])
