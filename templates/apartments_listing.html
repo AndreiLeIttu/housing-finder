@@ -1,23 +1,25 @@
 {% extends "layout.html" %} 
 {% block content %} 
-<h1>Listing</h1>
+<h1 style="text-align: center;">Listing</h1>
 {% for apartment in apartments %} 
     <h2>{{apartment.name}}</h2>
+    <a href="{{apartment.link}}">Link</a>
+    <br>
     <img src="{{apartment.image}}">
     <div class="container text-center">
         <div class="row">
-            <div class="col">
+            <div class="col-sm-2">
             {{"Price: " + apartment.price}}
             </div>
-            <div class="col">
+            <div class="col-sm-2">
             {{"Size: " + apartment.size}}
             </div>
-            <div class="col">
+            <div class="col-sm-2">
             {{apartment.roomNo}}
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col-6">
             {{"Address: " + apartment.address}}
             </div>
         </div>
