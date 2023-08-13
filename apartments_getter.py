@@ -2,22 +2,7 @@ from bs4 import BeautifulSoup
 import time
 from selenium import webdriver
 
-'''dr = webdriver.Chrome()
-dr.get("https://www.pararius.com/apartments/delft")
-time.sleep(3)
-soup = BeautifulSoup(dr.page_source, 'html.parser')
-
-titles = soup.find_all(class_="listing-search-item__link listing-search-item__link--title")
-
-dr.get("https://www.pararius.com/apartments/delft/page-2")
-soup = BeautifulSoup(dr.page_source, 'html.parser')
-for title in soup.find_all(class_="listing-search-item__link listing-search-item__link--title"):
-    titles.append(title)
-
-titles = list(titles)
-print(len(titles))'''
-
-def pararius_initial_link(filters):
+def initial_link(filters):
     link = "https://pararius.com/apartments/" + filters["city"].lower()
     priceRange = "/" + str(filters["minPrice"]) + "-" + str(filters["maxPrice"])
     if filters["rooms"] != 1:
@@ -32,8 +17,10 @@ def pararius_initial_link(filters):
     return link
 
 def get_pararius_links(filters) :
-    dr = webdriver.Chrome()
-    initialLink = pararius_initial_link(filters)
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    dr = webdriver.Chrome(options=options)
+    initialLink = initial_link(filters)
     print(initialLink)
     dr.get(initialLink)
     time.sleep(5) 
@@ -64,11 +51,13 @@ def get_pararius_links(filters) :
             index+=1
     return links
 
-def get_pararius_apartments(filters) :
+def get_apartments(filters) :
     apartments = []
     counter=0
     links = get_pararius_links(filters)
-    dr = webdriver.Chrome()
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    dr = webdriver.Chrome(options=options)
     for link in links:
         link = "https://pararius.com" + link
         dr.get(link)
@@ -77,7 +66,7 @@ def get_pararius_apartments(filters) :
         if counter==1:
             time.sleep(2)
         soup = BeautifulSoup(dr.page_source, 'html.parser')
-        if validate_apartment(soup):
+        if validate_pararius_apartment(soup):
             address = soup.find(class_="listing-detail-summary__location").text
             name = soup.find(class_="listing-detail-summary__title").text
             price = soup.find(class_="listing-detail-summary__price").contents[0].strip()
@@ -89,7 +78,7 @@ def get_pararius_apartments(filters) :
                 apartments.append(Apartment(link,image,name,address,price,roomNo,size))
     return apartments           
 
-def validate_apartment(soup):
+def validate_pararius_apartment(soup):
     for elem in soup.find_all("p") + soup.find_all("li"):
         if not_for_students(elem.text):
             return False

@@ -1,6 +1,7 @@
 {% extends "layout.html" %} 
 {% block content %} 
-<h1 style="text-align: center;">Listing</h1>
+<h1>Listing</h1>
+<br>
 {% for apartment in apartments %} 
     <h2>{{apartment.name}}</h2>
     <a href="{{apartment.link}}">Link</a>
